@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/profile/me_Curly_Hair.jpg?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/profile/me_Curly_Hair.jpg?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/profile/me_Curly_Hair.jpg?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/profile/me_Curly_Hair.jpg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Quantopian笔记系列 Lesson 3 Referencing Securities在 Pipeline API module 中，有两个手动选择证券的方法：  sid()  优点： 稳定。一个证券的 sid 不会变，但 ticker 有可能变。   symbol()  缺点： 不稳定。    Lesson 4 Ordering SecuritiesQuantopian 提供了很多下单的方">
+<meta name="keywords" content="Python,Quantopian">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quantopian Turtorials Notes #2">
+<meta property="og:url" content="https://heyu.cloud/blog/201608/Quantopian-Note-2/index.html">
+<meta property="og:site_name" content="Hey U">
+<meta property="og:description" content="Quantopian笔记系列 Lesson 3 Referencing Securities在 Pipeline API module 中，有两个手动选择证券的方法：  sid()  优点： 稳定。一个证券的 sid 不会变，但 ticker 有可能变。   symbol()  缺点： 不稳定。    Lesson 4 Ordering SecuritiesQuantopian 提供了很多下单的方">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-02-18T22:41:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Quantopian Turtorials Notes #2">
+<meta name="twitter:description" content="Quantopian笔记系列 Lesson 3 Referencing Securities在 Pipeline API module 中，有两个手动选择证券的方法：  sid()  优点： 稳定。一个证券的 sid 不会变，但 ticker 有可能变。   symbol()  缺点： 不稳定。    Lesson 4 Ordering SecuritiesQuantopian 提供了很多下单的方">
+
+
+
+
+
+
+  <link rel="canonical" href="https://heyu.cloud/blog/201608/Quantopian-Note-2/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Quantopian Turtorials Notes #2 | Hey U</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hey U</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">何小宇的窝</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />Archives<span class="badge">6</span></a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="Searching..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://heyu.cloud">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Heyu Gong">
+      <meta itemprop="description" content="天堂有路你不走，学海无涯苦作舟">
+      <meta itemprop="image" content="../../../profile/me_Curly_Hair.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hey U">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Quantopian Turtorials Notes #2
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-08-13 16:14:48" itemprop="dateCreated datePublished" datetime="2016-08-13T16:14:48+08:00">2016-08-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2017-02-19 06:41:18" itemprop="dateModified" datetime="2017-02-19T06:41:18+08:00">2017-02-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="../../../categories/笔记/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong><a href="https://www.quantopian.com/learn" target="_blank" rel="noopener">Quantopian</a>笔记系列</strong></p>
+<h3 id="Lesson-3-Referencing-Securities"><a href="#Lesson-3-Referencing-Securities" class="headerlink" title="Lesson 3 Referencing Securities"></a><a href="https://www.quantopian.com/tutorials/getting-started#lesson3" target="_blank" rel="noopener">Lesson 3 Referencing Securities</a></h3><p>在 <strong>Pipeline API</strong> module 中，有两个手动选择证券的方法：</p>
+<ul>
+<li><p><code>sid()</code></p>
+<ul>
+<li>优点： 稳定。一个证券的 sid 不会变，但 ticker 有可能变。</li>
+</ul>
+</li>
+<li><p><code>symbol()</code></p>
+<ul>
+<li>缺点： 不稳定。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Lesson-4-Ordering-Securities"><a href="#Lesson-4-Ordering-Securities" class="headerlink" title="Lesson 4 Ordering Securities"></a><a href="https://www.quantopian.com/tutorials/getting-started#lesson4" target="_blank" rel="noopener">Lesson 4 Ordering Securities</a></h3><p>Quantopian 提供了很多<a href="https://www.quantopian.com/help#api-order-methods" target="_blank" rel="noopener">下单的方法</a></p>
+<ul>
+<li><p><code>order_target_percent(security, percent, style=type)</code>: Place an order to adjust a position to a target percent of the current portfolio value.</p>
+<ul>
+<li><p>Parameters</p>
+<ul>
+<li>security: A security object.</li>
+<li>percent: The portfolio percentage allocated to the security. Positive means buy, negative means sell.</li>
+<li><p>type: (optional) Specifies the order style and the default is a market order. The available order styles are:</p>
+<ul>
+<li>style=MarketOrder(exchange)</li>
+<li>style=StopOrder(stop_price, exchange)</li>
+<li>style=LimitOrder(limit_price, exchange)</li>
+<li>style=StopLimitOrder(limit_price=price1, stop_price=price2, exchange)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>i.e.</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(context)</span>:</span></span><br><span class="line">  context.aapl = sid(<span class="number">24</span>)</span><br><span class="line">  context.spy = sid(<span class="number">8554</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_data</span><span class="params">(context, data)</span>:</span></span><br><span class="line">  <span class="comment"># Note: data.can_trade() is explained in the next lesson</span></span><br><span class="line">  <span class="keyword">if</span> data.can_trade(context.aapl):</span><br><span class="line">      order_target_percent(context.aapl, <span class="number">0.60</span>)</span><br><span class="line">  <span class="keyword">if</span> data.can_trade(context.spy):</span><br><span class="line">      order_target_percent(context.spy, <span class="number">-0.40</span>)</span><br></pre></td></tr></table></figure>
+<p>这个例子就是做多 AAPL，价值占整个 portfolio 的 60%， 做空 SPY ETF，价值占整个 portfolio 的 40%。</p>
+</li>
+</ul>
+<h3 id="Lesson-5-The-data-Object"><a href="#Lesson-5-The-data-Object" class="headerlink" title="Lesson 5 The data Object"></a><a href="https://www.quantopian.com/tutorials/getting-started#lesson5" target="_blank" rel="noopener">Lesson 5 The <code>data</code> Object</a></h3><p><code>data</code> 类包含了可以用在 <code>handle_data()</code> 和 <code>before_trading_start()</code> 以及其它一些 <em>scheduled functions</em> 中的函数</p>
+<ul>
+<li><p><a href="https://www.quantopian.com/help#api-data-current" target="_blank" rel="noopener"><code>data.current(assets, fields)</code></a>: Can be used to retrieve the most recent value of a given field(s) for a given asset(s).</p>
+<ul>
+<li><p>Parameters</p>
+<ul>
+<li>assets: Asset or iterable of Assets.</li>
+<li>fields: string or iterable of strings. Valid values are ‘price’, ‘last_traded’, ‘open’, ‘high’, ‘low’, ‘close’, ‘volume’, or column names in Fetcher files.</li>
+</ul>
+</li>
+<li><p>Return Value: 返回值为 <em>单一值</em> 或者 <em>pd.Series</em> 或者 <em>pd.DataFrame</em> 类型。</p>
+</li>
+<li><p>notes:</p>
+<ul>
+<li><em>price</em> 如果找不到 last price，则返回 <em>NaN</em>。</li>
+<li>_last_traded_ 返回 last trade 的日期。如果找不到值，则返回 <em>pd.NaT</em>。</li>
+<li><em>volume</em> 返回上一分钟内成交量。</li>
+</ul>
+</li>
+<li><p>i.e.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.current([sid(<span class="number">24</span>), sid(<span class="number">8554</span>)], [<span class="string">'low'</span>, <span class="string">'high'</span>])</span><br></pre></td></tr></table></figure>
+<p>这个例子返回一个 pd.DataFrame 类型。</p>
+</li>
+</ul>
+</li>
+<li><p><a href="https://www.quantopian.com/help#api-data-can_trade" target="_blank" rel="noopener"><code>data.can_trade(assets)</code></a>: Is used to determine if an asset(s) is currently listed on a supported exchange and can be ordered.</p>
+<ul>
+<li><p>Parameters</p>
+<ul>
+<li>assets: Asset or iterable of Assets.</li>
+</ul>
+</li>
+<li><p>Return Value: 返回 boolean or Series of booleans, indexed by asset. 如果 asset 有 last price，又在当前的一分钟内可交易，就会返回 true value。</p>
+</li>
+<li><p>i.e.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.can_trade(sid(<span class="number">24</span>))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Lesson-6-The-history-Function"><a href="#Lesson-6-The-history-Function" class="headerlink" title="Lesson 6 The history() Function"></a><a href="https://www.quantopian.com/tutorials/getting-started#lesson6" target="_blank" rel="noopener">Lesson 6 The <code>history()</code> Function</a></h3><p>在 <code>data</code> 对象中有一个常用的函数 —- <code>history()</code>，它是用来获取历史价格和成交量数据的。</p>
+<p><code>history()</code> 包含四个参数：an asset or list of assets, a field or list of fields, an integer lookback window length, 以及 a lookback frequency。</p>
+<ul>
+<li><p>Parameters</p>
+<ul>
+<li>an list of assets: 这个参数要求股票的 sid 的列表。</li>
+<li>a field or list of field: 这个参数要求一个字符串或者列表，可以是 <code>&#39;price&#39;</code>, <code>&#39;open&#39;</code>, <code>&#39;high&#39;</code>, <code>&#39;low&#39;</code>, <code>&#39;close&#39;</code>, 和 <code>&#39;volume&#39;</code> 中的一个（字符串）或者几个（列表）。</li>
+<li>an integer lookback window length： 这个参数要求一个整数，代表回看窗口的长度。例如回看窗口长度为2，frequency 参数值为’1d’，则 history() 返回的历史数据的时间跨度为 2 * 1d = 2d 。</li>
+<li>a lookback frequency: 这个参数用来定义数据的频率，可以是<code>&#39;1d&#39;</code> (daily) 或者 <code>&#39;1m&#39;</code> (minutely)。</li>
+</ul>
+</li>
+<li><p>Return value：放回值为 Pandas.Series 或者 Pandas.DataFrame</p>
+</li>
+<li><p>Notes: 如果 frequency 的值为 <code>&#39;1d&#39;</code>，则最近一天的值可能为这一天中某个时刻的值。比如 <code>hist = data.history(sid(24), &#39;price&#39;, 10, &#39;1d&#39;)</code>,如果在9：31发出请求，则会返回前9天 AAPL 的收盘价格，和今天9：31分 AAPL 的价格。</p>
+</li>
+<li><p>i.e.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Get the last 5 minutes of volume data for each security in our list.</span></span><br><span class="line">hist = data.history([sid(<span class="number">24</span>), sid(<span class="number">8554</span>), sid(<span class="number">5061</span>)], <span class="string">'volume'</span>, <span class="number">5</span>, <span class="string">'1m'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Calculate the mean volume for each security in our DataFrame.</span></span><br><span class="line">mean_volumes = hist.mean(axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>这个例子首先返回一个 Pandas.DataFrame 结构，列分别表示三个资产，行（索引）为不同的时间。然后求出三个资产的平均价格。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Low and high minute bar history for each of our securities.</span></span><br><span class="line">hist = data.history([sid(<span class="number">24</span>), sid(<span class="number">8554</span>), sid(<span class="number">5061</span>)], [<span class="string">'low'</span>, <span class="string">'high'</span>], <span class="number">5</span>, <span class="string">'1m'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Calculate the mean low and high over the last 5 minutes</span></span><br><span class="line">means = hist.mean()</span><br><span class="line">mean_lows = means[<span class="string">'low'</span>]</span><br><span class="line">mean_highs = means[<span class="string">'high'</span>]</span><br></pre></td></tr></table></figure>
+<p>这个例子首先返回一个 <a href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Panel.html" target="_blank" rel="noopener">Pandas.Panel</a> 结构，分为三个维度，第一个维度（minor axis）表示不同的三个资产，第二个维度（index）表示最低价和最高价，第三个维度（main axis）表示不同的时间。 然后根据 <code>means = hist.mean()</code> 返回的是一个 library，library 中的键值分别为 <code>&#39;low&#39;</code> 和 <code>&#39;high&#39;</code>，值分别为三个股票的最低价均值和最高价均值的 library。（例如用 <code>means[&#39;low&#39;][&#39;sid(24)&#39;]</code>可以查询 AAPL 的最低价的均值）</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../../../tags/Python/" rel="tag"># Python</a>
+          
+            <a href="../../../tags/Quantopian/" rel="tag"># Quantopian</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../Quantopian-Note-1/" rel="next" title="Quantopian Turtorials Notes #1">
+                <i class="fa fa-chevron-left"></i> Quantopian Turtorials Notes #1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../c-复杂变量声明/" rel="prev" title="C++ 复杂变量声明">
+                C++ 复杂变量声明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="../../../profile/me_Curly_Hair.jpg"
+                alt="Heyu Gong" />
+            
+              <p class="site-author-name" itemprop="name">Heyu Gong</p>
+              <p class="site-description motion-element" itemprop="description">天堂有路你不走，学海无涯苦作舟</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="../../../archives/">
+                
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/heyu91" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:h.y@live.cn" target="_blank" title="e-mail"><i class="fa fa-fw fa-envelope"></i>e-mail</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://stackoverflow.com/heyu91" target="_blank" title="StackOverflow"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/heyugong/" target="_blank" title="LinkedIn"><i class="fa fa-fw fa-linkedin"></i>LinkedIn</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/profile/mmqrcode1537626790338.png" target="_blank" title="Wechat"><i class="fa fa-fw fa-wechat"></i>Wechat</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://weibo.com/1144741433" target="_blank" title="Weibo"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Lesson-3-Referencing-Securities"><span class="nav-number">1.</span> <span class="nav-text">Lesson 3 Referencing Securities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lesson-4-Ordering-Securities"><span class="nav-number">2.</span> <span class="nav-text">Lesson 4 Ordering Securities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lesson-5-The-data-Object"><span class="nav-number">3.</span> <span class="nav-text">Lesson 5 The data Object</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lesson-6-The-history-Function"><span class="nav-number">4.</span> <span class="nav-text">Lesson 6 The history() Function</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-mars-stroke"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Heyu Gong</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.4.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../lib/three/canvas_lines.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="../../../js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="../../../js/src/affix.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="../../../js/src/schemes/pisces.js?v=6.4.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="../../../js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="../../../js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('25');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
