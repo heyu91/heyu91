@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://heyu.cloud/"/>
-  <updated>2018-09-22T16:53:55.452Z</updated>
+  <updated>2018-09-22T16:58:20.966Z</updated>
   <id>https://heyu.cloud/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://heyu.cloud/blog/201807/%E4%BD%BF%E7%94%A8-optimize-minimize-method-SLSQP-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BF%83%E5%BE%97/"/>
     <id>https://heyu.cloud/blog/201807/使用-optimize-minimize-method-SLSQP-的一些心得/</id>
     <published>2018-07-16T05:04:13.000Z</published>
-    <updated>2018-09-22T16:53:55.452Z</updated>
+    <updated>2018-09-22T16:58:20.966Z</updated>
     
     <content type="html"><![CDATA[<ol><li><p>最好要有 jac</p><p> 一般来说 jac 也不是很难求，有 jac 的时候求解答速度会快很多，成功率也会提高很多</p></li><li><p>初始 x0 最好满足边际约束条件</p><p> 初始 x0 对求解成功与否有很大影响，而且有的时候如果初始 x0 在边界外，最后就算求解成功了，姐也可能不满足边界条件。所以初始 x0 满足边界条件是一个好的开始。</p><p> 比如如果 <code>bounds = [(0, 1), (-1, 1), (0, 3)]</code> ，可以试试 <code>x0 = np.asarray(bounds).mean(axis=1)</code></p></li><li><p>target 函数的标准化</p><p> 最好限制 traget 函输出的结果“不要太大”也“不要太小”</p><p> 比如如果 <code>fun</code> 函数为</p> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fun</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="comment"># x 取值范围为 [-1 ,1]</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">100</span> * x[<span class="number">0</span>] + <span class="number">100</span> * x[<span class="number">1</span>] - <span class="number">50</span> * x[<span class="number">2</span>]</span><br></pre></td></tr></table></figure><p> 最好把函数变为</p> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fun</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> x[<span class="number">0</span>] + x[<span class="number">1</span>] - <span class="number">0.5</span> * x[<span class="number">2</span>]</span><br></pre></td></tr></table></figure><p> 同理如果有 <code>constraints</code> 最好也这么调整</p><p> 因为根据 <a href="https://docs.scipy.org/doc/scipy-1.0.0/reference/optimize.minimize-slsqp.html#optimize-minimize-slsqp" target="_blank" rel="noopener"><code>minimize(method=’SLSQP’)</code></a>，当效用函数</p><p> $\min_x \frac{1}{2} \sum_{i=1}^{m} \rho(f_i(x^2))$</p><p> $subject\ to\ lb \leqslant x \leqslant ub$</p><p> 的精度小于 <code>ftol</code> 这个参数时，停止求解，如果目标函数 $f_i(x)$ 的返回值太大的话，可能会报 <code>Positive directional derivative for linesearch    (Exit mode 8)</code> 这个错，或者结果和约束条件的差距的数量级比较高。</p></li><li><p><code>Inequality constraints incompatible    (Exit mode 4)</code></p><p> 这可能是由于 target 函数中有除以0或者接近除以0的错误。<br> 我没有研究过具体代码，我觉得可能是当没有提供 jac 时，target 函数中有除以0或者接近除以0的情况时，会导致估计出的 jac 也非常大，要不就是正的非常大，要不就是负的非常大，这会让求解过程很不稳定，一不小心就会导致解超出 constraints 或者 bounds。</p><p> 这种情况解决的方法（不一定对）：</p><ul><li>通过限制 bounds 使 target 函数不会有除0的情况</li><li>减小 <a href="https://docs.scipy.org/doc/scipy/reference/optimize.minimize-slsqp.html" target="_blank" rel="noopener">eps</a>，即估计 jac 时使用的步长，使 jac 的估计不那么离谱</li></ul></li></ol>]]></content>
     
@@ -40,7 +40,11 @@
     </summary>
     
     
-      <category term="python, scipy, optimize" scheme="https://heyu.cloud/tags/python-scipy-optimize/"/>
+      <category term="python" scheme="https://heyu.cloud/tags/python/"/>
+    
+      <category term="scipy" scheme="https://heyu.cloud/tags/scipy/"/>
+    
+      <category term="optimize" scheme="https://heyu.cloud/tags/optimize/"/>
     
   </entry>
   
