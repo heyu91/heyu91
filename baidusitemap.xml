@@ -3,21 +3,23 @@
 
 
     
-    
   <url>
     <loc>https://heyu.cloud/blog/201807/%E4%BD%BF%E7%94%A8-optimize-minimize-method-SLSQP-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BF%83%E5%BE%97/</loc>
-    <lastmod>2018-07-31T11:35:06.000Z</lastmod>
+    <lastmod>2018-09-22T16:53:55.452Z</lastmod>
     <data>
         <display>
         <title>使用 optimize.minimize(method='SLSQP') 的一些心得</title>
         <pubTime>2018-07-16T05:04:13.000Z</pubTime>
         
+        <tag>python, scipy, optimize</tag>
+         
          
            
         </display>
     </data>
     </url>
 
+    
     
   <url>
     <loc>https://heyu.cloud/blog/201704/Atom-%E9%85%8D%E7%BD%AE-for-Python/</loc>
