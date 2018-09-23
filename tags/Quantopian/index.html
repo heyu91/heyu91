@@ -61,16 +61,16 @@
 <link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/profile/me_Curly_Hair.jpg?v=6.4.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/profile/g_256_256.png?v=6.4.1">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/profile/me_Curly_Hair.jpg?v=6.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/profile/g_512_512.png?v=6.4.1">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/profile/me_Curly_Hair.jpg?v=6.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/profile/g_256_256.png?v=6.4.1">
 
 
-  <link rel="mask-icon" href="/profile/me_Curly_Hair.jpg?v=6.4.1" color="#222">
+  <link rel="mask-icon" href="/profile/g_512_512.png?v=6.4.1" color="#222">
 
 
 
@@ -86,7 +86,7 @@
     root: '/',
     scheme: 'Pisces',
     version: '6.4.1',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
     fancybox: false,
     fastclick: false,
     lazyload: false,
@@ -510,12 +510,12 @@
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="mailto:h.y@live.cn" target="_blank" title="e-mail"><i class="fa fa-fw fa-envelope"></i>e-mail</a>
+                  <a href="mailto:h.y@live.cn" target="_blank" title="E-mail"><i class="fa fa-fw fa-envelope"></i>E-mail</a>
                   
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="https://stackoverflow.com/heyu91" target="_blank" title="StackOverflow"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+                  <a href="https://stackoverflow.com/users/4956987" target="_blank" title="StackOverflow"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
                   
                 </span>
               
@@ -525,7 +525,7 @@
                 </span>
               
                 <span class="links-of-author-item">
-                  <a href="/profile/mmqrcode1537626790338.png" target="_blank" title="Wechat"><i class="fa fa-fw fa-wechat"></i>Wechat</a>
+                  <a href="/profile/wechat_qrcode.png" target="_blank" title="Wechat"><i class="fa fa-fw fa-wechat"></i>Wechat</a>
                   
                 </span>
               
@@ -553,6 +553,13 @@
 
       
 
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
       
 
     </div>
@@ -605,11 +612,6 @@
       </div>
     </footer>
 
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
     
 
     
@@ -1044,6 +1046,103 @@
         onPopupClose();
       }
     });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('Copy')
+        }, 300)
+      }).append(e)
+    })
   </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
@@ -1063,37 +1162,6 @@
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
 
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-  
-
-  
-
-
-  
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
 </body>
 </html>

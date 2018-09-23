@@ -3,6 +3,7 @@
 
 
     
+    
   <url>
     <loc>https://heyu.cloud/blog/201807/%E4%BD%BF%E7%94%A8-optimize-minimize-method-SLSQP-%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BF%83%E5%BE%97/</loc>
     <lastmod>2018-09-22T16:58:20.966Z</lastmod>
@@ -33,9 +34,9 @@
         <title>Atom 配置 - for Python</title>
         <pubTime>2017-03-31T17:07:16.000Z</pubTime>
         
-        <tag>Python</tag>
-         
         <tag>Atom</tag>
+         
+        <tag>Python</tag>
          
          
            
@@ -47,7 +48,6 @@
     </url>
 
     
-    
   <url>
     <loc>https://heyu.cloud/blog/201608/Quantopian-Note-2/</loc>
     <lastmod>2017-02-18T22:41:18.000Z</lastmod>
@@ -56,9 +56,9 @@
         <title>Quantopian Turtorials Notes #2</title>
         <pubTime>2016-08-13T08:14:48.000Z</pubTime>
         
-        <tag>Quantopian</tag>
-         
         <tag>Python</tag>
+         
+        <tag>Quantopian</tag>
          
          
            
@@ -78,9 +78,9 @@
         <title>Quantopian Turtorials Notes #1</title>
         <pubTime>2016-08-13T08:14:40.000Z</pubTime>
         
-        <tag>Quantopian</tag>
-         
         <tag>Python</tag>
+         
+        <tag>Quantopian</tag>
          
          
            
