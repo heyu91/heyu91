@@ -1,0 +1,6 @@
+https://heyu.cloud/blog/201807/使用-optimize-minimize-method-SLSQP-的一些心得/
+https://heyu.cloud/blog/201704/Atom-配置-for-Python/
+https://heyu.cloud/blog/201608/c-复杂变量声明/
+https://heyu.cloud/blog/201608/Quantopian-Note-2/
+https://heyu.cloud/blog/201608/Quantopian-Note-1/
+https://heyu.cloud/blog/201605/SWIFT-iOS-笔记 - 井字棋/
